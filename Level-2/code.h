@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////
 ///                                                  ///
-///   0. Perform code review. Can you spot the bug?  /// 
+///   0. Perform code review. Can you spot the bug?  ///
 ///   1. Run tests.c to test the functionality       ///
 ///   2. Run hack.c and if passing then CONGRATS!    ///
 ///   3. Compare your solution with solution.c       ///
@@ -17,19 +17,22 @@
 #define SETTINGS_COUNT 10
 int userid_next = 1;
 
-typedef struct {
+typedef struct
+{
     bool isAdmin;
     long userid;
     char username[MAX_USERNAME_LEN + 1];
     long setting[SETTINGS_COUNT];
 } user_account;
 
-user_account* create_user_account(bool isAdmin, const char* username) {
-    user_account* ua;
-    if (strlen(username) > MAX_USERNAME_LEN) 
+user_account *create_user_account(bool isAdmin, const char *username)
+{
+    user_account *ua;
+    if (strlen(username) > MAX_USERNAME_LEN)
         return NULL;
-    ua = malloc(sizeof (user_account));
-    if (NULL == ua) {
+    ua = malloc(sizeof(user_account));
+    if (NULL == ua)
+    {
         fprintf(stderr, "malloc failed to allocate memory");
         return NULL;
     }
@@ -40,10 +43,12 @@ user_account* create_user_account(bool isAdmin, const char* username) {
     return ua;
 }
 
-bool update_setting(user_account* ua, const char *index, const char *value) {
+bool update_setting(user_account *ua, const char *index, const char *value)
+{
     char *endptr;
-    long i, v;
-    i = strtol(index, &endptr, 10);
+    unsigned long i;
+    long v;
+    i = strtoul(index, &endptr, 10);
     if (*endptr)
         return false;
     if (i >= SETTINGS_COUNT)
