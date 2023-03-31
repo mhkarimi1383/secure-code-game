@@ -1,7 +1,7 @@
-'''
+"""
 ////////////////////////////////////////////////////////////
 ///                                                      ///
-///   0. tests.py is passing but the code is vulnerable  /// 
+///   0. tests.py is passing but the code is vulnerable  ///
 ///   1. Review the code. Can you spot the bug?          ///
 ///   2. Fix the code but ensure that tests.py passes    ///
 ///   3. Run hack.py and if passing then CONGRATS!       ///
@@ -9,25 +9,40 @@
 ///   5. Compare your solution with solution.py          ///
 ///                                                      ///
 ////////////////////////////////////////////////////////////
-'''
+"""
 
 from collections import namedtuple
+from typing import Final
 
-Order = namedtuple('Order', 'id, items')
-Item = namedtuple('Item', 'type, description, amount, quantity')
+MAX_QUANTITY: Final[int] = 100
+MAX_ITEM_AMOUNT: Final[int] = 100000
+MAX_TOTAL: Final[int] = 1e6
+
+Order = namedtuple("Order", "id, items")
+Item = namedtuple("Item", "type, description, amount, quantity")
+
 
 def validorder(order: Order):
     net = 0
-    
+
     for item in order.items:
-        if item.type == 'payment':
-            net += item.amount
-        elif item.type == 'product':
-            net -= item.amount * item.quantity
+        if item.type == "payment":
+            if item.amount > -1 * MAX_ITEM_AMOUNT and item.amount < MAX_ITEM_AMOUNT:
+                net += item.amount
+        elif item.type == "product":
+            if (
+                item.quantity > 0
+                and item.quantity <= MAX_QUANTITY
+                and item.amount > 0
+                and item.amount <= MAX_ITEM_AMOUNT
+            ):
+                net -= item.amount * item.quantity
+            if net > MAX_TOTAL or net < -1 * MAX_TOTAL:
+                return "Total amount exceeded"
         else:
-            return("Invalid item type: %s" % item.type)
-    
+            return "Invalid item type: %s" % item.type
+
     if net != 0:
-        return("Order ID: %s - Payment imbalance: $%0.2f" % (order.id, net))
+        return "Order ID: %s - Payment imbalance: $%0.2f" % (order.id, net)
     else:
-        return("Order ID: %s - Full payment received!" % order.id)
+        return "Order ID: %s - Full payment received!" % order.id
